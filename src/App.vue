@@ -1,7 +1,8 @@
 <template>
 <div class = "container">
-<HeaderComponent title = "Task-Tracker"/>
-<TasksComponent :tasks= "tasks"/>
+<HeaderComponent title = "Task-Tracker" @toggle-add-task= "toggleAddTask" :showAddTask = "showAddTask"/>
+<AddTask v-show= "showAddTask" @add-task= "addTask"/>
+<TasksComponent :tasks= "tasks" @delete-task= "deleteTask" @toggle-reminder = "toggleReminder"/>
 </div>
  
 </template>
@@ -9,16 +10,37 @@
 <script>
 import HeaderComponent from './components/HeaderComponent.vue'
 import TasksComponent from './components/TasksComponent.vue'
+import AddTask from './components/AddTask.vue'
+
 
 export default {
   name: 'App',
   components: {
-   HeaderComponent,
-   TasksComponent
-  },
+    HeaderComponent,
+    TasksComponent,
+    AddTask
+},
   data(){
    return {
-     tasks: []
+     tasks: [],
+     showAddTask: false
+   }
+  },
+  methods:{
+   deleteTask(id){
+     if(confirm('Are you sure you want to delete it?')){
+      this.tasks = this.tasks.filter(t=> t.id !== id);
+     }
+    
+   },
+   toggleReminder(id){
+      this.tasks = this.tasks.map(t => t.id === id? {...t, reminder: !t.reminder} : t)
+   },
+   addTask(newTask){
+      this.tasks = [...this.tasks, newTask]
+   },
+   toggleAddTask(){
+     this.showAddTask = !this.showAddTask
    }
   },
   created(){
