@@ -27,43 +27,60 @@ export default {
    }
   },
   methods:{
-   deleteTask(id){
+    async addTask(task){
+    const res = await fetch('api/tasks', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+       },
+       body: JSON.stringify(task)
+    })
+    const data = await res.json()
+    console.log(data)
+    this.tasks = [...this.tasks, data]
+  },
+  async deleteTask(id){
      if(confirm('Are you sure you want to delete it?')){
-      this.tasks = this.tasks.filter(t=> t.id !== id);
+       const res = await fetch(`api/tasks/${id}`,{
+         method:'DELETE'
+       })
+       res.status === 200? (this.tasks = this.tasks.filter(t=> t.id !== id)): alert('error deleting the task')
+      
      }
     
    },
-   toggleReminder(id){
-      this.tasks = this.tasks.map(t => t.id === id? {...t, reminder: !t.reminder} : t)
+  async toggleReminder(id){
+    const tasktoToggle = await this.fetchTask(id)
+    console.log(tasktoToggle.reminder)
+    const updatedTask = {...tasktoToggle, reminder: !tasktoToggle.reminder}
+    const res = await fetch(`api/tasks/${id}`,{
+      method: 'PUT',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify(updatedTask)
+    })
+    const data= await res.json()
+      this.tasks = this.tasks.map(t => t.id === id? {...t, reminder: data.reminder} : t)
    },
-   addTask(newTask){
-      this.tasks = [...this.tasks, newTask]
-   },
+  
    toggleAddTask(){
      this.showAddTask = !this.showAddTask
-   }
+   },
+  async fetchTasks(){
+    const res = await fetch('api/tasks');
+    const data = await res.json();
+    return data;
+   },
+   async fetchTask(id){
+    const res = await fetch(`api/tasks/${id}`);
+    const data = await res.json();
+    return data;
+   },
   },
-  created(){
-    this.tasks= [
-      {
-        id: 1,
-        text: "Doctor's Appointment",
-        day: 'july 8th, 2022',
-        reminder: true
-        },
-        {
-        id: 2,
-        text: "Groceries shopping",
-        day: 'july 11th, 2022',
-        reminder: true
-        },
-        {
-        id: 3,
-        text: "Movie time",
-        day: 'july 15th, 2022',
-        reminder: false
-        }
-    ]
+ 
+ async created(){
+    this.tasks= await this.fetchTasks()
 
     
   }

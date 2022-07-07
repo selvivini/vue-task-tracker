@@ -1,0 +1,22 @@
+{
+  "tasks": [
+    {
+      "id": "2",
+      "text": "Groceries shopping",
+      "day": "july 11th, 2022",
+      "reminder": false
+    },
+    {
+      "id": "3",
+      "text": "Movie time",
+      "day": "july 15th, 2022",
+      "reminder": true
+    },
+    {
+      "id": 87,
+      "text": "dr appt",
+      "day": "22 june, 2022",
+      "reminder": true
+    }
+  ]
+}
