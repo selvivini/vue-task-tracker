@@ -1,11 +1,10 @@
 <template>
     <header>
         <h1>{{ title }}</h1>
-        <ButtonComponent class="btn" :color="showAddTask? 'red': 'green'" 
-        :text="showAddTask ? 'close': 'Add Task' "
-        @toggle-add-task= "$emit('toggle-add-task')"/>
+        <ButtonComponent v-show="homePage" class="btn" :color="showAddTask ? 'red' : 'green'"
+            :text="showAddTask ? 'close' : 'Add Task'" @toggle-add-task="$emit('toggle-add-task')" />
     </header>
-    
+
 </template>
 
 
@@ -14,12 +13,21 @@ import ButtonComponent from './ButtonComponent.vue';
 
 export default {
     name: 'HeaderComponent',
-    components:{
-     ButtonComponent
+    components: {
+        ButtonComponent
     },
     props: {
         title: String,
         showAddTask: Boolean
+    },
+    computed: {
+        homePage() {
+            if (this.$route.path === '/') {
+                return true
+            } else {
+                return false
+            }
+        }
     }
 }
 </script>
